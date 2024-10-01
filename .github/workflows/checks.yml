@@ -27,3 +27,12 @@ jobs:
       - name: Build and push Docker image
         run: docker build -t username/recipe-app-api:latest .
           docker push username/recipe-app-api:latest
+
+      - name: Check Username and Password
+        run: |
+          echo "Username: $DOCKERHUB_USER" 
+          echo "Password length: ${ #DOCKERHUB_TOKEN }"
+
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
