@@ -6,9 +6,12 @@ on: [push]
 jobs:
   test-lint:
     name: Test and Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -25,5 +28,5 @@ jobs:
         run: docker compose run --rm app sh -c "flake8"
 
       - name: Build and push Docker image
-        run: docker build -t username/recipe-app-api:latest .
-          docker push username/recipe-app-api:latest
+        run: docker build . -t ${{ secrets.DOCKERHUB_USER }}/my-recipe-app
+          docker push ${{ secrets.DOCKERHUB_USER }}/recipe-app-api
