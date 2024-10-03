@@ -37,4 +37,3 @@ class CommandTest(SimpleTestCase):
 
         # Assert last call was with databases=['default']
         patched_check.assert_called_with(databases=['default'])
-

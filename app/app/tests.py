@@ -1,3 +1,4 @@
+
 """
 Sample test
 """
@@ -11,13 +12,9 @@ class CalcTest(SimpleTestCase):
     def test_add_numbers(self):
         """Test adding numbers together."""
         res = calc.add(5, 6)
-
-        self.assertEqual(res, 11) 
+        self.assertEqual(res, 11)
 
     def test_subtract_numbers(self):
-        """Test subtrscking numbers."""
+        """Test subtracting numbers."""
         res = calc.subtract(10, 15)
-
         self.assertEqual(res, 5)
-
-
