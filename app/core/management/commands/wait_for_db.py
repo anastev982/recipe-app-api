@@ -10,7 +10,6 @@ from django.db.utils import OperationalError
 class Command(BaseCommand):
     """Django command to wait for the database."""
 
-
     def handle(self, *args, **options):
         """Entrypoint for command."""
         self.stdout.write("Waiting for database...")
