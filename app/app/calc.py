@@ -8,5 +8,3 @@ def add(x, y):
 def subtract(x, y):
     """Subtract x and y and return result."""
     return y - x
-
-# Ensure a blank line at the end of the file
