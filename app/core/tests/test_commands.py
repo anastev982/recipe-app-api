@@ -21,12 +21,11 @@ class CommandTest(SimpleTestCase):
 
         # Ensure it was called once
         patched_check.assert_called_once_with(databases=["default"])
-        
 
     @patch("time.sleep")
     def test_for_db_delay(self, patched_sleep, patched_check):
         """Test waiting for database when getting OperationalError"""
-        # Simulate 2 Psycopg2Errors,3 OperationalErrors,then successful connection
+        # Simulate 2 Psycopg2 errors, 3 OperationalErrors, then successful connection
         patched_check.side_effect = (
             [Psycopg2Error] * 2 + [OperationalError] * 3 + [True]
         )
@@ -39,3 +38,5 @@ class CommandTest(SimpleTestCase):
 
         # Assert last call was with databases=['default']
         patched_check.assert_called_with(databases=["default"])
+
+# Ensure a blank line at the end of the file
