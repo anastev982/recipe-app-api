@@ -13,10 +13,30 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from user.views import APIRootView
+from rest_framework.routers import DefaultRouter
+from user import views as user_views
+from recipe import views as recipe_views
+from user.views import CustomObtainAuthToken
+from rest_framework_simplejwt.views import ( 
+     TokenRefreshView )
+
+
+app_name = 'api'
+
+router = DefaultRouter()
+router.register(r'users', user_views.UserViewSet, basename='user')
+router.register(r'recipes', recipe_views.RecipeViewSet, basename = 'recipe' )
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('api/', APIRootView.as_view(), name='api_root'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='api_schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='api_schema'), name='api_docs'),
+    path('api/user/', include('user.urls')), 
+    path('api/recipe/', include('recipe.urls')),
 ]
