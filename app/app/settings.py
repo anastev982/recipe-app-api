@@ -93,30 +93,31 @@ DATABASES = {
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "UserAttributeSimilarityValidator"
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'UserAttributeSimilarityValidator'
         ),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "MinimumLengthValidator"
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'MinimumLengthValidator'
         ),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "CommonPasswordValidator"
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'CommonPasswordValidator'
         ),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "NumericPasswordValidator"
+        'NAME': (
+            'django.contrib.auth.password_validation.'
+            'NumericPasswordValidator'
         ),
     },
 ]
+
 
 LOGIN_REDIRECT_URL = "/admin/"
 
@@ -162,6 +163,10 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(
+        minutes=5
+    ),
+    'REFRESH_TOKEN_LIFETIME': timedelta(
+        days=1
+    ),
 }

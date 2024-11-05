@@ -1,4 +1,5 @@
----
+version: "3.8"
+
 services:
   app:
     build:
@@ -15,9 +16,9 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     environment:
       DB_HOST: db
-      DB_NAME: devdb
-      DB_USER: devuser
-      DB_PASSWORD: changeme
+      DB_NAME: "${DB_NAME:-devdb}"
+      DB_USER: "${DB_USER:-devuser}"
+      DB_PASSWORD: "${DB_PASSWORD:-changeme}"
     depends_on:
       - db
 
