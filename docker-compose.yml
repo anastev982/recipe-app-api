@@ -5,6 +5,7 @@ services:
       context: .
       args:
         DEV: true
+    image: paunica/recipe-app-api
     ports:
       - "8000:8000"
     volumes:
