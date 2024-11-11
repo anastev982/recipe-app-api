@@ -84,4 +84,4 @@ class UserAPITests(APITestCase):
 
         logger.debug(f"Bad credentials Response: {response.data}")
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
