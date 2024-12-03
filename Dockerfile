@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.13
+FROM python:3.9-alpine3.18
 
 # Maintainer information
 LABEL maintainer="londonappdeveloper.com"
@@ -23,25 +23,22 @@ EXPOSE 8000
 ARG DEV=false
 
 # Install Python dependencies and necessary packages
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
-    apk add --update --no-cache --virtual .tmp-build-deps \
-    build-base postgresql-dev musl-dev && \
-    /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ "$DEV" = "true" ]; then \
-    /py/bin/pip install -r /tmp/requirements.dev.txt ; \
-    fi && \
-    # Cleanup
-    rm -rf /tmp && \
-    apk del .tmp-build-deps && \
-    # Create a non-root user
-    adduser \
-    --disabled-password \
-    --no-create-home \
-    django-user
+RUN apk add --no-cache \
+    gcc \
+    python3-dev \
+    musl-dev \
+    postgresql-dev \
+    build-base \
+    libffi-dev \
+    && python -m venv /py \
+    && /py/bin/pip install --upgrade pip \
+    && /py/bin/pip install -r /tmp/requirements.txt \
+    && if [ "$DEV" = "true" ]; then /py/bin/pip install -r /tmp/requirements.dev.txt; fi \
+    && rm -rf /tmp \
+    && apk del build-base postgresql-dev musl-dev \
+    && adduser --disabled-password --no-create-home django-user
 
-# Add the Python virtual environment to PATH
+# Set the PATH environment variable for the virtual environment
 ENV PATH="/py/bin:$PATH"
 
 # Switch to the non-root user

@@ -11,6 +11,11 @@ from core import models
 from rest_framework.test import APIClient
 
 
+def create_user(email="user@example.com", password="testpassword123"):
+    """Create and returne a new user."""
+    return get_user_model().objects.create_user(email, password)
+
+
 class ModelTests(TestCase):
     """Test model"""
 
@@ -46,9 +51,7 @@ class ModelTests(TestCase):
     def test_create_superuser(self):
         """Test creating a superuser."""
         user = get_user_model().objects.create_superuser(
-            email="superuser@example.com",
-            password="supertest123",
-            name="Super User"
+            email="superuser@example.com", password="supertest123", name="Super User"
         )
 
         self.assertTrue(user.is_superuser)
@@ -90,3 +93,20 @@ class ModelTests(TestCase):
         recipe = models.Recipe.objects.get(title="Recipes")
 
         self.assertEqual(str(recipe), recipe.title)
+
+    def test_create_tag(self):
+        """Test creating a tag is successful."""
+        user = create_user()
+        tag = models.Tag.objects.create(user=user, name="Tag1")
+
+        self.assertEqual(str(tag), tag.name)
+
+    def test_create_ingredient(self):
+        """Test creating an ingredient is successful."""
+        user = create_user()
+        ingredient = models.Ingredient.objects.create(
+            user=user,
+            name="Ingredient",
+        )
+
+        self.assertEqual(str(ingredient), ingredient.name)

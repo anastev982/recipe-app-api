@@ -11,17 +11,17 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-l7lw(@t59_@vrt$imz+4c^m&j*0&l^%wh=alpgienyc*@$)ace"
-)
+SECRET_KEY = "django-insecure-l7lw(@t59_@vrt$imz+4c^m&j*0&l^%wh=alpgienyc*@$)ace"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,11 +42,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "core",
-    "rest_framework.authtoken",
-    "rest_framework",
-    "drf_spectacular",
     "user",
     "recipe",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -87,34 +87,32 @@ DATABASES = {
         "NAME": os.environ.get("DB_NAME", "devdb"),
         "USER": os.environ.get("DB_USER", "devuser"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "changeme"),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
+
+if "test" in sys.argv:
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": ":memory:",  # Use in-memory database for tests
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'UserAttributeSimilarityValidator'
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
         ),
     },
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'MinimumLengthValidator'
-        ),
+        "NAME": ("django.contrib.auth.password_validation." "MinimumLengthValidator"),
     },
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'CommonPasswordValidator'
-        ),
+        "NAME": ("django.contrib.auth.password_validation." "CommonPasswordValidator"),
     },
     {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'NumericPasswordValidator'
-        ),
+        "NAME": ("django.contrib.auth.password_validation." "NumericPasswordValidator"),
     },
 ]
 
@@ -163,10 +161,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(
-        minutes=5
-    ),
-    'REFRESH_TOKEN_LIFETIME': timedelta(
-        days=1
-    ),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+TEST_RUNNER = "django.test.runner.DiscoverRunner"

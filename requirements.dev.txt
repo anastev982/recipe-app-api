@@ -1,1 +1,5 @@
+# Development dependencies
 flake8>=3.9.2,<3.10
+# Add other dev tools like black, pytest if needed
+# black==22.1.0
+# pytest==6.2.5

@@ -9,8 +9,10 @@ app_name = "recipe"
 # Create a router and register the RecipeViewSet.
 router = DefaultRouter()
 router.register(r"recipes", views.RecipeViewSet, basename="recipe")
+router.register(r"tags", views.TagViewSet)
+router.register(r"ingredients", views.IngredientViewSet)
 
 # Define the URL patterns
 urlpatterns = [
-    path("", include(router.urls)),  # Include router URLs
+    path("", include(router.urls)),
 ]
