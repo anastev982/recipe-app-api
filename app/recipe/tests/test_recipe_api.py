@@ -47,7 +47,8 @@ def create_recipe(user, num=1, **params):
             recipe.tags.add(tag_obj)
 
         for ingredient in ingredients:
-            ingredient_obj, _ = Ingredient.objects.get_or_create(user=user, **ingredient)
+            ingredient_obj, _ = Ingredient.objects.get_or_create(
+                user=user, **ingredient)
             recipe.ingredients.add(ingredient_obj)
 
         recipes.append(recipe)
@@ -207,4 +208,3 @@ class PrivateRecipeAPITest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.ingredients.count(), 0)
-

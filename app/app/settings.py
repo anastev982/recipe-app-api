@@ -16,21 +16,18 @@ import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-l7lw(@t59_@vrt$imz+4c^m&j*0&l^%wh=alpgienyc*@$)ace"
+SECRET_KEY = (
+    "django-insecure-l7lw(@t59_@vrt$imz+4c^m&j*0&l^%wh=alpgienyc*@$)ace"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "testserver",
-]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -72,9 +69,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-            ],
+            ]
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = "app.wsgi.application"
@@ -87,7 +84,7 @@ DATABASES = {
         "NAME": os.environ.get("DB_NAME", "devdb"),
         "USER": os.environ.get("DB_USER", "devuser"),
         "PASSWORD": os.environ.get("DB_PASSWORD", "changeme"),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -106,16 +103,24 @@ AUTH_PASSWORD_VALIDATORS = [
         ),
     },
     {
-        "NAME": ("django.contrib.auth.password_validation." "MinimumLengthValidator"),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": ("django.contrib.auth.password_validation." "CommonPasswordValidator"),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": ("django.contrib.auth.password_validation." "NumericPasswordValidator"),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator"
+        ),
     },
 ]
-
 
 LOGIN_REDIRECT_URL = "/admin/"
 

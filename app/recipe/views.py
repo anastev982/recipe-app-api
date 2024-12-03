@@ -2,7 +2,6 @@ from rest_framework import viewsets, mixins
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -62,7 +61,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
+
     def perform_update(self, serializer):
         """Update the recipe, ensuring the current user is linked."""
         instance = serializer.save(user=self.request.user)

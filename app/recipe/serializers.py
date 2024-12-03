@@ -1,3 +1,4 @@
+#
 """Serializers foe recipe APIs."""
 
 from rest_framework import serializers
@@ -7,7 +8,6 @@ from core.models import Ingredient  # Ensure the import is not missing
 from core.models import (
     Tag,
     Recipe,
-    Ingredient,
 )
 
 
@@ -57,11 +57,11 @@ class RecipeSerializer(serializers.ModelSerializer):
         """Handle getting ot creating tags as needed."""
         auth_user = self.context["request"].user
         for tag in tags:
-            tag_obj, _  = Tag.objects.get_or_create(
-                user=auth_user, 
+            tag_obj, _ = Tag.objects.get_or_create(
+                user=auth_user,
                 **tag,
-                #name=tag['name']
-                )
+                # name=tag['name']
+            )
 
             recipe.tags.add(tag_obj)
 
@@ -69,21 +69,20 @@ class RecipeSerializer(serializers.ModelSerializer):
         """Handle getting or creating ingredients as needed."""
         auth_user = self.context["request"].user
         for ingredient in ingredients:
-            ingredient_obj, _  = Ingredient.objects.get_or_create(
+            ingredient_obj, _ = Ingredient.objects.get_or_create(
                 user=auth_user,
                 **ingredient,
-                #name=ingredient['name']
+                # name=ingredient['name']
             )
 
             recipe.ingredients.add(ingredient_obj)
 
     def create(self, validated_data):
         """Create a recipe."""
-        user = self.context["request"].user
         tags_data = validated_data.pop("tags", [])
         ingredients_data = validated_data.pop("ingredients", [])
         recipe = Recipe.objects.create(**validated_data)
-        
+
         self._get_or_create_tags(tags_data, recipe)
         self._get_or_create_ingredients(ingredients_data, recipe)
 
@@ -107,7 +106,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-    
+
         instance.save()
         return instance
 

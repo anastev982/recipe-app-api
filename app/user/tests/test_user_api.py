@@ -81,7 +81,10 @@ class PublicUserApiTests(TestCase):
 
     def test_create_token_bad_credentials(self):
         """Test return error if credentials invalid."""
-        create_user(email="test@example.com", password="goodpass", name="Test User")
+        create_user(
+            email="test@example.com",
+            password="goodpass",
+            name="Test User")
 
         payload = {"email": "test@example.com", "password": "badpass"}
         res = self.client.post(TOKEN_URL, payload)
@@ -109,7 +112,9 @@ class PrivateUserApiTests(TestCase):
 
     def setUp(self):
         self.user = create_user(
-            email="testuser@example.com", password="testpassword123", name="Test User"
+            email="testuser@example.com",
+            password="testpassword123",
+            name="Test User"
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
