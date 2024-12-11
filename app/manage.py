@@ -5,8 +5,8 @@ import sys
 if __name__ == "__main__":
     # Point to the correct settings location inside app/app/
     os.environ.setdefault(
-        "DJANGO_SETTINGS_MODULE", "app.settings"
-    )  # This assumes settings.py is in the app/app folder
+        "DJANGO_SETTINGS_MODULE",
+        "app.settings")  # This assumes settings.py is in the app/app folder
 
     try:
         from django.core.management import execute_from_command_line
@@ -16,11 +16,8 @@ if __name__ == "__main__":
         except ImportError:
             raise ImportError(
                 "Couldn't import Django. Are you sure it's installed and "
-                "available on your PYTHONPATH environment variable?"
-            )
+                "available on your PYTHONPATH environment variable?")
     execute_from_command_line(sys.argv)
-
-
 """Django's command-line utility for administrative tasks."""
 '''import os
 import sys

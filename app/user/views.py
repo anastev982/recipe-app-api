@@ -15,7 +15,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 User = get_user_model()
 
 
@@ -54,9 +53,8 @@ class TokenViewSet(viewsets.ViewSet):
             request.user.auth_token.delete()
             logger.debug(f"Token deleted for user: {request.user.email}")
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            {"detail": "Not authenticated"}, status=status.HTTP_403_FORBIDDEN
-        )
+        return Response({"detail": "Not authenticated"},
+                        status=status.HTTP_403_FORBIDDEN)
 
 
 class UserViewSet(viewsets.ModelViewSet):

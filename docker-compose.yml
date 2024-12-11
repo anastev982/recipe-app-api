@@ -10,6 +10,7 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
+      - dev-static-data:/vol/web
     command: /bin/sh -c "/app/init_db.sh"
     environment:
       DB_HOST: db
@@ -35,6 +36,7 @@ services:
 
 volumes:
   dev-db-data:
+  dev-static-data:
 
 networks:
   default:

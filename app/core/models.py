@@ -1,5 +1,8 @@
 """Database models"""
 
+import uuid
+import os
+
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import (
@@ -7,6 +10,19 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+
+
+def recipe_image_file_path(instance, filename):
+    """Generate file path for new recipe image."""
+    # Using func splitext of the path module to extraxt the extention from the
+    # filename
+    ext = os.path.splitext(filename)[1]
+    # Creating our own filename by creating uuid and appending the previous
+    # extention
+    filename = f"{uuid.uuid4()}{ext}"
+    # Generating the path and passing (values)
+    # Makes sure that the string is created in appropriet format
+    return os.path.join("uploads", "recipe", filename)
 
 
 class UserManager(BaseUserManager):
@@ -55,17 +71,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Recipe(models.Model):
     """Recipe object."""
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    # description = models.TextField(blank=True)
     time_minutes = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     link = models.CharField(max_length=255, blank=True)
     tags = models.ManyToManyField("Tag")
     ingredients = models.ManyToManyField("Ingredient")
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(null=True,
+                              upload_to=recipe_image_file_path,
+                              blank=True)
 
     def __str__(self):
         return self.title
@@ -75,9 +93,8 @@ class Tag(models.Model):
     """Tag for filtering recipes."""
 
     name = models.CharField(max_length=255, unique=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -87,9 +104,8 @@ class Ingredient(models.Model):
     """Ingredient for recipes."""
 
     name = models.CharField(max_length=255)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

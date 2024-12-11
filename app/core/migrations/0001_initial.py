@@ -30,9 +30,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "last_login",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
-                    ),
+                    models.DateTimeField(blank=True,
+                                         null=True,
+                                         verbose_name="last login"),
                 ),
                 (
                     "is_superuser",
@@ -40,8 +40,7 @@ class Migration(migrations.Migration):
                         default=False,
                         help_text=(
                             "Designates that this user has all permissions "
-                            "without explicitly assigning them."
-                        ),
+                            "without explicitly assigning them."),
                         verbose_name="superuser status",
                     ),
                 ),
@@ -56,8 +55,7 @@ class Migration(migrations.Migration):
                         help_text=(
                             "The groups this user belongs to. A user will "
                             "get all permissions granted to each of their "
-                            "groups."
-                        ),
+                            "groups."),
                         related_name="user_set",
                         related_query_name="user",
                         to="auth.Group",

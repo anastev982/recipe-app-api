@@ -9,6 +9,11 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from core import models
 from rest_framework.test import APIClient
+from unittest.mock import patch
+
+from rest_framework import status
+
+RECIPES_URL = reverse("recipe:recipe-list")
 
 
 def create_user(email="user@example.com", password="testpassword123"):
@@ -24,9 +29,9 @@ class ModelTests(TestCase):
         email = "test@example.com"
         password = "testpass123"
         name = "Test User"
-        user = get_user_model().objects.create_user(
-            email=email, password=password, name=name
-        )
+        user = get_user_model().objects.create_user(email=email,
+                                                    password=password,
+                                                    name=name)
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
@@ -53,41 +58,48 @@ class ModelTests(TestCase):
         user = get_user_model().objects.create_superuser(
             email="superuser@example.com",
             password="supertest123",
-            name="Super User"
-        )
+            name="Super User")
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
 
     def test_create_recipe(self):
         """Test creating a recipe is successful."""
-        user = get_user_model().objects.create_user(
-            email="test@example.com", password="testpass123", name="Test User"
-        )
+        user = get_user_model().objects.create_user(email="test@example.com",
+                                                    password="testpass123",
+                                                    name="Test User")
 
         # Ensure the user is created and exists
         self.assertTrue(
-            get_user_model().objects.filter(email="test@example.com").exists()
-        )
+            get_user_model().objects.filter(email="test@example.com").exists())
 
         # Log in the user
         client = APIClient()
         client.force_authenticate(user=user)
-
-        url = reverse("recipe:recipe-list")
 
         payload = {
             "title": "Recipes",
             "time_minutes": 5,
             "price": Decimal("5.50"),
             "description": "Sample recipe description.",
+            "link": "http://example.com/recipe/",
+            "tags": [{
+                "name": "Vegan"
+            }, {
+                "name": "Dessert"
+            }],
+            "ingredients": [{
+                "name": "Sugar"
+            }, {
+                "name": "Flour"
+            }],
         }
 
-        res = client.post(url, payload)
+        res = client.post(RECIPES_URL, payload, format="json")
+        print("Res data:", res.data)
 
         # Check if the response status code is 201
-        self.assertEqual(res.status_code, 201)
-        print(res.data)  # This will show you the response data
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
         # Check if the recipe was created
         self.assertTrue(models.Recipe.objects.filter(title="Recipes").exists())
@@ -112,3 +124,14 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(ingredient), ingredient.name)
+
+    @patch("core.models.uuid.uuid4")
+    def test_recipe_file_name_uuid(self, mock_uuid):
+        """Test generating image path."""
+        uuid = "test-uuid"  # Modify unic identifyer uuid to some degree
+        mock_uuid.return_value = uuid
+        file_path = models.recipe_image_file_path(None, "example.jpg")
+
+        self.assertEqual(
+            file_path, f"uploads/recipe/{uuid}.jpg"
+        )  # Checking that uuid replaces the name exmple.com with uuid

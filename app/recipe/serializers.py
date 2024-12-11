@@ -4,7 +4,6 @@
 from rest_framework import serializers
 from core.models import Ingredient  # Ensure the import is not missing
 
-
 from core.models import (
     Tag,
     Recipe,
@@ -29,8 +28,8 @@ class TagSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
     def validate(self, attrs):
-        if not attrs.get('name'):
-            raise serializers.ValidationError('Tag name is required.')
+        if not attrs.get("name"):
+            raise serializers.ValidationError("Tag name is required.")
         return attrs
 
 
@@ -39,10 +38,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(many=True, required=False)
     ingredients = IngredientSerializer(many=True, required=False)
+    image = serializers.ImageField(required=False, allow_null=False)
 
     class Meta:
         model = Recipe
-        fields = [
+        fields = (
             "id",
             "title",
             "time_minutes",
@@ -50,8 +50,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             "link",
             "tags",
             "ingredients",
-        ]
+            "description",
+            "image",
+        )
+        extra_kwargs = {"image": {"required": False, "allow_null": True}}
         read_only_fields = ["id"]
+
+        def validat_image(self, value):
+            if value is None:
+                return value
+            return value
 
     def _get_or_create_tags(self, tags, recipe):
         """Handle getting ot creating tags as needed."""
@@ -81,10 +89,15 @@ class RecipeSerializer(serializers.ModelSerializer):
         """Create a recipe."""
         tags_data = validated_data.pop("tags", [])
         ingredients_data = validated_data.pop("ingredients", [])
+        image = validated_data.pop("image", None)
         recipe = Recipe.objects.create(**validated_data)
 
         self._get_or_create_tags(tags_data, recipe)
         self._get_or_create_ingredients(ingredients_data, recipe)
+
+        if image:
+            recipe.image = image
+            recipe.save()
 
         return recipe
 
@@ -113,19 +126,19 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeDetailSerializer(RecipeSerializer):
     """Serializer for recipe detail view."""
-    tags = TagSerializer(many=True, required=False)
-    ingredients = IngredientSerializer(many=True, required=False)
+
+    description = serializers.CharField()
+    image = serializers.ImageField(required=False)
+
+    class Meta(RecipeSerializer.Meta):
+        fields = RecipeSerializer.Meta.fields + ("description", "image")
+
+
+class RecipeImageSerializer(serializers.ModelSerializer):
+    """Serializer for uploading images to recipes."""
 
     class Meta:
         model = Recipe
-        fields = [
-            'id',
-            'title',
-            'time_minutes',
-            'price',
-            'link',
-            'tags',
-            'ingredients',
-            'description'
-        ]
-        read_only_fields = ['id']
+        fields = ["id", "image"]
+        read_only_fields = ["id"]
+        extra_kwargs = {"image": {"required": False, "allow_null": True}}

@@ -21,14 +21,14 @@ from user.views import APIRootView
 from rest_framework.routers import DefaultRouter
 from user import views as user_views
 from recipe import views as recipe_views
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 app_name = "api"
 
 router = DefaultRouter()
 router.register(r"users", user_views.UserViewSet, basename="user")
 router.register(r"recipes", recipe_views.RecipeViewSet, basename="recipe")
-
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -42,3 +42,7 @@ urlpatterns = [
     path("api/user/", include("user.urls")),
     path("api/recipe/", include("recipe.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

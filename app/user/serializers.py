@@ -23,12 +23,8 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = [
-            "id",
-            "title",
-            "description",
-            "ingredients",
-            "instructions",
-            "user"]
+            "id", "title", "description", "ingredients", "instructions", "user"
+        ]
 
 
 class APIRootSerializer(serializers.Serializer):

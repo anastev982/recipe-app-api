@@ -20,14 +20,14 @@ class AdminSiteTests(TestCase):
             existing_user.delete()
 
         # Create a superuser (admin)
-        self.admin = User.objects.create_superuser(
-            email="admin@example.com", password="Ana", name="Test Admin"
-        )
+        self.admin = User.objects.create_superuser(email="admin@example.com",
+                                                   password="Ana",
+                                                   name="Test Admin")
 
         # Create a regular user with a different email
-        self.user = User.objects.create_user(
-            email="user@example.com", password="Ana", name="Test User"
-        )
+        self.user = User.objects.create_user(email="user@example.com",
+                                             password="Ana",
+                                             name="Test User")
 
         # Force login the admin
         self.client.force_login(self.admin)
@@ -44,9 +44,10 @@ class AdminSiteTests(TestCase):
         self.assertEqual(res.status_code, 200)
 
         # Perform a login attempt
-        res = self.client.post(
-            url, {"username": "admin@example.com", "password": "Ana"}
-        )
+        res = self.client.post(url, {
+            "username": "admin@example.com",
+            "password": "Ana"
+        })
 
         # Check that it redirects to the admin page
         self.assertRedirects(

@@ -1,7 +1,14 @@
 [flake8]
 exlude =
-  migration,
+  migrations,
   _pucache_,
   manage.py,
-  setings.py
+  setings.py,
+  node_modules,
+  .yapf,
+  .git,
+  .venv,
+    .venv/*/yapftests
+
+
 

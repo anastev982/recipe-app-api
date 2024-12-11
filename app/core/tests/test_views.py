@@ -62,8 +62,10 @@ class UserAPITests(APITestCase):
         url = reverse("user:token")
         response = self.client.post(
             url,
-            {"email": self.user_data["email"],
-             "password": self.user_data["password"]},
+            {
+                "email": self.user_data["email"],
+                "password": self.user_data["password"]
+            },
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -72,14 +74,17 @@ class UserAPITests(APITestCase):
     def test_create_token_bad_credentials(self):
         """Test return error if credentials are invalid."""
         # Create a user for testing
-        User.objects.create_user(
-            email="test@example.com", password="goodpass", name="Test User"
-        )
+        User.objects.create_user(email="test@example.com",
+                                 password="goodpass",
+                                 name="Test User")
 
         # Use invalid credentials
         response = self.client.post(
             reverse("user:token"),
-            {"email": "test@example.com", "password": "badpass"},
+            {
+                "email": "test@example.com",
+                "password": "badpass"
+            },
         )
 
         logger.debug(f"Bad credentials Response: {response.data}")
