@@ -25,3 +25,6 @@ jobs:
 
       - name: Run Django checks
         run: python manage.py check
+
+      - name: Verify Pillow Installation
+        run: python -c "import PIL; print(PIL.__version__)"

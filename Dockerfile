@@ -4,7 +4,9 @@ FROM python:3.9-alpine3.18
 LABEL maintainer="londonappdeveloper.com"
 
 # Environment variable to ensure Python output is sent straight to terminal
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/py/bin:$PATH"
 
 # Copy requirements files
 COPY ./requirements.txt /tmp/requirements.txt
@@ -24,6 +26,7 @@ ARG DEV=false
 
 # Install Python dependencies and necessary packages
 RUN apk add --no-cache \
+    apk add --no-cache jpeg-dev zlib-dev \
     postgresql-client \
     jpeg-dev \
     gcc \
@@ -35,11 +38,13 @@ RUN apk add --no-cache \
     libffi-dev && \
     python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
-    /py/bin/pip install -r /tmp/requirements.txt && \
-    if [ "$DEV" = "true" ]; then /py/bin/pip install -r /tmp/requirements.dev.txt; fi && \
+    /py/bin/pip install --no-cache-dir -r /tmp/requirements.txt && \
+    if [ "$DEV" = "true" ]; then /py/bin/pip install --no-cache-dir -r /tmp/requirements.dev.txt; fi && \
     rm -rf /tmp && \
-    apk del build-base postgresql-dev musl-dev && \
-    adduser --disabled-password --no-create-home django-user && \
+    apk del build-base postgresql-dev musl-dev
+
+# Add non-root user and set permissions for volumes
+RUN adduser --disabled-password --no-create-home django-user && \
     mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
@@ -50,3 +55,6 @@ ENV PATH="/py/bin:$PATH"
 
 # Switch to the non-root user
 USER django-user
+
+# Default command (can be overridden)
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app.wsgi:application"]
